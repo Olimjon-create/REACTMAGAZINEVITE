@@ -8,7 +8,19 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+} from "recharts";
 import type { Product, StockMovement } from "@shared/schema";
 
 export default function Dashboard() {
@@ -16,13 +28,16 @@ export default function Dashboard() {
     queryKey: ["/api/products"],
   });
 
-  const { data: movements, isLoading: movementsLoading } = useQuery<StockMovement[]>({
+  const { data: movements, isLoading: movementsLoading } = useQuery<
+    StockMovement[]
+  >({
     queryKey: ["/api/movements"],
   });
 
   const totalProducts = products?.length || 0;
   const totalStock = products?.reduce((sum, p) => sum + p.quantity, 0) || 0;
-  const lowStockItems = products?.filter((p) => p.quantity <= p.minStockLevel) || [];
+  const lowStockItems =
+    products?.filter((p) => p.quantity <= p.minStockLevel) || [];
   const recentMovements = movements?.slice(0, 10) || [];
 
   const categoryData = products?.reduce((acc, product) => {
@@ -39,26 +54,41 @@ export default function Dashboard() {
     ?.slice(0, 7)
     .reverse()
     .map((m) => ({
-      date: new Date(m.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      date: new Date(m.timestamp).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
       incoming: m.type === "in" ? m.quantity : 0,
       outgoing: m.type === "out" ? m.quantity : 0,
     }));
 
-  const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))", "hsl(var(--chart-5))"];
+  const COLORS = [
+    "hsl(var(--chart-1))",
+    "hsl(var(--chart-2))",
+    "hsl(var(--chart-3))",
+    "hsl(var(--chart-4))",
+    "hsl(var(--chart-5))",
+  ];
 
   const isLoading = productsLoading || movementsLoading;
 
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold" data-testid="text-page-title">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Overview of your warehouse inventory</p>
+        <h1 className="text-2xl font-semibold" data-testid="text-page-title">
+          Dashboard
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Overview of your warehouse inventory
+        </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card data-testid="card-stat-total-products">
           <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Products
+            </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -66,8 +96,15 @@ export default function Dashboard() {
               <Skeleton className="h-8 w-24" />
             ) : (
               <>
-                <div className="text-3xl font-bold" data-testid="text-total-products">{totalProducts}</div>
-                <p className="text-xs text-muted-foreground mt-1">Active items in inventory</p>
+                <div
+                  className="text-3xl font-bold"
+                  data-testid="text-total-products"
+                >
+                  {totalProducts}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Active items in inventory
+                </p>
               </>
             )}
           </CardContent>
@@ -83,8 +120,15 @@ export default function Dashboard() {
               <Skeleton className="h-8 w-24" />
             ) : (
               <>
-                <div className="text-3xl font-bold" data-testid="text-total-stock">{totalStock}</div>
-                <p className="text-xs text-muted-foreground mt-1">Units across all products</p>
+                <div
+                  className="text-3xl font-bold"
+                  data-testid="text-total-stock"
+                >
+                  {totalStock}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Units across all products
+                </p>
               </>
             )}
           </CardContent>
@@ -92,7 +136,9 @@ export default function Dashboard() {
 
         <Card data-testid="card-stat-low-stock">
           <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Low Stock Alerts</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Low Stock Alerts
+            </CardTitle>
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -100,8 +146,15 @@ export default function Dashboard() {
               <Skeleton className="h-8 w-24" />
             ) : (
               <>
-                <div className="text-3xl font-bold text-destructive" data-testid="text-low-stock-count">{lowStockItems.length}</div>
-                <p className="text-xs text-muted-foreground mt-1">Items need restocking</p>
+                <div
+                  className="text-3xl font-bold text-destructive"
+                  data-testid="text-low-stock-count"
+                >
+                  {lowStockItems.length}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Items need restocking
+                </p>
               </>
             )}
           </CardContent>
@@ -109,7 +162,9 @@ export default function Dashboard() {
 
         <Card data-testid="card-stat-recent-movements">
           <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Recent Activity
+            </CardTitle>
             <TrendingDown className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -117,8 +172,15 @@ export default function Dashboard() {
               <Skeleton className="h-8 w-24" />
             ) : (
               <>
-                <div className="text-3xl font-bold" data-testid="text-recent-movements-count">{movements?.length || 0}</div>
-                <p className="text-xs text-muted-foreground mt-1">Stock movements today</p>
+                <div
+                  className="text-3xl font-bold"
+                  data-testid="text-recent-movements-count"
+                >
+                  {movements?.length || 0}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Stock movements today
+                </p>
               </>
             )}
           </CardContent>
@@ -128,16 +190,15 @@ export default function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card data-testid="card-category-distribution">
           <CardHeader>
-            <CardTitle className="text-lg font-medium">Category Distribution</CardTitle>
+            <CardTitle className="text-lg font-medium">
+              Category Distribution
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <Skeleton className="h-[300px]" />
             ) : categoryData && categoryData.length > 0 ? (
-              <ChartContainer
-                config={{}}
-                className="h-[300px]"
-              >
+              <ChartContainer config={{}} className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -145,13 +206,18 @@ export default function Dashboard() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
                     >
                       {categoryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
                     <ChartTooltip content={<ChartTooltipContent />} />
@@ -168,7 +234,9 @@ export default function Dashboard() {
 
         <Card data-testid="card-stock-movements-chart">
           <CardHeader>
-            <CardTitle className="text-lg font-medium">Stock Movement Trend</CardTitle>
+            <CardTitle className="text-lg font-medium">
+              Stock Movement Trend
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -183,12 +251,23 @@ export default function Dashboard() {
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={movementData}>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      className="stroke-border"
+                    />
                     <XAxis dataKey="date" className="text-xs" />
                     <YAxis className="text-xs" />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="incoming" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="outgoing" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
+                    <Bar
+                      dataKey="incoming"
+                      fill="hsl(var(--chart-1))"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="outgoing"
+                      fill="hsl(var(--chart-2))"
+                      radius={[4, 4, 0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -204,7 +283,9 @@ export default function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card data-testid="card-low-stock-items">
           <CardHeader>
-            <CardTitle className="text-lg font-medium">Low Stock Items</CardTitle>
+            <CardTitle className="text-lg font-medium">
+              Low Stock Items
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -223,14 +304,22 @@ export default function Dashboard() {
                   >
                     <div className="flex-1">
                       <p className="font-medium text-sm">{product.name}</p>
-                      <p className="text-xs text-muted-foreground">SKU: {product.sku}</p>
+                      <p className="text-xs text-muted-foreground">
+                        SKU: {product.sku}
+                      </p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="text-right">
-                        <p className="text-sm font-medium text-destructive">{product.quantity} units</p>
-                        <p className="text-xs text-muted-foreground">Min: {product.minStockLevel}</p>
+                        <p className="text-sm font-medium text-destructive">
+                          {product.quantity} units
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Min: {product.minStockLevel}
+                        </p>
                       </div>
-                      <Badge variant="destructive" className="text-xs">Low Stock</Badge>
+                      <Badge variant="destructive" className="text-xs">
+                        Low Stock
+                      </Badge>
                     </div>
                   </div>
                 ))}
@@ -245,7 +334,9 @@ export default function Dashboard() {
 
         <Card data-testid="card-recent-movements">
           <CardHeader>
-            <CardTitle className="text-lg font-medium">Recent Stock Movements</CardTitle>
+            <CardTitle className="text-lg font-medium">
+              Recent Stock Movements
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -269,7 +360,9 @@ export default function Dashboard() {
                         <TrendingDown className="h-4 w-4 text-chart-2" />
                       )}
                       <div>
-                        <p className="font-medium text-sm">{movement.productName}</p>
+                        <p className="font-medium text-sm">
+                          {movement.productName}
+                        </p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(movement.timestamp).toLocaleString()}
                         </p>
@@ -277,9 +370,15 @@ export default function Dashboard() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium">
-                        {movement.type === "in" ? "+" : "-"}{movement.quantity}
+                        {movement.type === "in" ? "+" : "-"}
+                        {movement.quantity}
                       </p>
-                      <Badge variant={movement.type === "in" ? "default" : "secondary"} className="text-xs">
+                      <Badge
+                        variant={
+                          movement.type === "in" ? "default" : "secondary"
+                        }
+                        className="text-xs"
+                      >
                         {movement.type === "in" ? "In" : "Out"}
                       </Badge>
                     </div>
