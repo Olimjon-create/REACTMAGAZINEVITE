@@ -22,6 +22,7 @@ import {
   Line,
 } from "recharts";
 import type { Product, StockMovement } from "@shared/schema";
+import { useState } from "react";
 
 export default function Dashboard() {
   const { data: products, isLoading: productsLoading } = useQuery<Product[]>({
